@@ -1,0 +1,80 @@
+@font-face {
+	font-family: "Saeculum";
+	src: url('./blufonts/Saeculum/Saeculum.eot');
+	src: local('***'), url('./blufonts/Saeculum/Saeculum.ttf') format('truetype');
+} 
+
+@font-face {
+	font-family: "MyriadWebPro";
+	src: url('./blufonts/MyriadWebPro/MyriadWebPro.eot');
+	src: local('***'), url('./blufonts/MyriadWebPro/MyriadWebPro.ttf') format('truetype');
+} 
+
+body 
+{
+	font-family: "Oxygen";  /*"Averia Libre";*/
+	font-size: 12px;
+	color: #999999;
+	line-height: 24px;
+	margin: 100px;
+}
+
+#scrollcontent
+{
+	overflow:hidden;
+}
+
+.galleryscroller
+{
+	
+	margin-top: 30px;
+    white-space: nowrap;
+    overflow:hidden;
+}
+
+.flickrimg
+{
+	visibility: hidden;
+	margin: 0px;
+}
+
+.imgsetcontainer
+{
+	position: relative;
+	display: inline;
+}
+
+.overlay
+{
+	background-color: #000000;
+ 	font-family: "Dosis";  /*"Averia Libre";*/
+ 	padding-top: 10px;
+ 	padding-left: 10px;  
+   font-size: 16px;
+	color: #FFFFFF;
+	  position:absolute;
+	  left: 0px;
+	  bottom:0%;
+	  filter:alpha(opacity=60);
+	  -moz-opacity:0.6;
+	  -khtml-opacity: 0.6;
+	  opacity: 0.6;
+	  height: 30px;
+	  width: 100%;
+}
+
+#title_martijn
+{
+	font-family: "Dosis";  /*"Averia Libre";*/
+	font-size: 48px;
+	color: #999999;
+	line-height: 92px;
+}
+
+#title_photography
+{
+	font-family: "Dosis";  /*"Averia Libre";*/
+	font-size: 48px;
+	color: #555555;
+	line-height: 92px;
+}
