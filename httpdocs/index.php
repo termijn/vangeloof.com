@@ -13,28 +13,39 @@
     $photos_url = $flickr->urls_getUserPhotos($person['id']);
  
  	$sets = $flickr->photosets_getList($person['id']);
- 
     
 	// see http://www.smashingmagazine.com/2009/07/10/35-beautiful-photography-websites/
 ?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<title>Martijn van Geloof</title>
-		<link href='http://fonts.googleapis.com/css?family=Dosis|Oxygen|Averia+Libre' rel='stylesheet' type='text/css'>
-		<link href='style/style.css' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Dosis|Oxygen|Averia+Libre' rel='stylesheet' type='text/css' />
+		<link href='style/style.css' rel='stylesheet' type='text/css' />
 		<script type="text/javascript" src="js/animator.min.js"></script>
 		<script type="text/javascript" src="js/maingallery.js"></script>
 	</head>
-	<body onload="createImageAnimations()" bgcolor="#000000">
+	<body onload="createImageAnimations()">
 		<p>
 			<span id="title_martijn">Martijn van Geloof</span> <span id="title_photography">Photography</span>	
 		</p>
 		<p>
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		</p>
-		<p>
-			<div id="scrollcontainer" class="galleryscroller" >
-				<div id="scrollcontent" >
+		
+		<div>
+			<div class="navigateback" onclick="navigatebackward()">
+					&larr;
+			</div>
+			<div class="navigateforward" onclick="navigateforward()">
+					&rarr;
+			</div>
+		</div>
+		
+		<div class="gallery">
+			<div id="scrollcontainer" class="galleryscroller" >	
+				<div id="scrollcontent" >	
 				<?
 					foreach ((array)$sets['photoset'] as $photoset)
 				    {
@@ -48,26 +59,36 @@
 					        //echo "<a href=$photos_url$photo[id]>";
 					        ?>
 					        <div class="imgsetcontainer">
-					       		<img id="<?= $photo['id']?>" class="flickrimg" onload="resizeHeight('<?= $photo['id']?>', 400)" border='0' alt='$photo[title]' src="<?=$flickr->buildPhotoURL($photo, "medium_640") ?>" />
-								<span class="overlay"><?=$photoset['title'] ?></span>
+					       		<img id="id<?= $photo['id']?>" class="flickrimg"  alt='$photo[title]' src="<?=$flickr->buildPhotoURL($photo, "medium_640") ?>" />
+								<span class="overlay"><?=$photoset['title'] ?></span>			
 							</div>
 							<?
 					          
 					    }
 						// If it reaches the sixth photo, insert a line break
-				        if ($i % 2 == 0) {
+				        if ($i % 2 == 0) 
+				        {
 				            //echo "<br>\n";
 				        }
 						
-						if ($i == 4)
+						if ($i == 8)
 						{
-							//break;
+							break;
 						}
 						
 					}
 				?>
 				</div>
 			</div>
-		</p>
+		</div>
+		
+		<div>
+			<div class="navigateback" onclick="navigatebackward()">
+					&larr;
+			</div>
+			<div class="navigateforward" onclick="navigateforward()">
+					&rarr;
+			</div>
+		</div>
 	</body>
 </html>

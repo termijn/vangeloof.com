@@ -116,13 +116,11 @@ var createScrollAnimation=function()
 	var scrollcontainer = document.getElementById("scrollcontainer");
 	var scrollcontent = document.getElementById("scrollcontent");
 	
-	scrollcontainer.parentElement.onmousemove = scrollcontainer.parentElement.onmouseout = scrollgallery;
-	
 	scrollcontainer.animator =
 		new Animator(
 			{
-		    	duration: 1000,
-		    	interval: 100
+		    	duration: 500,
+		    	interval: 10
 		    }
 		   );
 	    
@@ -131,8 +129,9 @@ var createScrollAnimation=function()
 		{
 			return function(value) 
 			{
-				position += direction * value * 150 + 20 * direction;
-				if (position > 0)
+				var scrollStep = (document.width) / 10;
+				position += direction * (value * scrollStep);
+				if (position >= 0)
 				{
 					position = 0;
 				}
@@ -140,6 +139,20 @@ var createScrollAnimation=function()
 			}
 		}(scrollcontent)
 	);
+}
+
+var navigatebackward=function(e)
+{
+	direction = 1;
+	var scrollcontainer = document.getElementById("scrollcontainer");
+	scrollcontainer.animator.play();
+}
+
+var navigateforward=function(e) 
+{
+	direction = -1;
+	var scrollcontainer = document.getElementById("scrollcontainer");
+	scrollcontainer.animator.play();
 }
 
 var scrollgallery=function(e) 

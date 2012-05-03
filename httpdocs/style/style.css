@@ -17,24 +17,59 @@ body
 	color: #999999;
 	line-height: 24px;
 	margin: 100px;
+	background-color: #000000;
 }
 
 #scrollcontent
 {
 	overflow:hidden;
+	position: relative;
+}
+
+.gallery
+{
+	margin-top: 40px;
+	
+}
+
+.navigateforward
+{
+	display: inline-block;
+	position: static;
+	float: right;
+    width: 30px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 24px;
+	cursor:pointer;
+    overflow:hidden; 
+}
+
+.navigateback
+{
+	display: inline-block;
+	position: static;
+	float: left;
+    width: 30px;
+	font-weight: bold;
+    font-size: 24px;
+    cursor:pointer;
+    overflow:hidden; 
 }
 
 .galleryscroller
 {
+	position: static;
 	
-	margin-top: 30px;
+	margin: 0px 0px 0px 0px;
     white-space: nowrap;
-    overflow:hidden;
+    overflow:hidden; 
+    
 }
 
 .flickrimg
 {
-	visibility: hidden;
+	height: 400px;
 	margin: 0px;
 }
 
@@ -44,17 +79,38 @@ body
 	display: inline;
 }
 
+
+.navigate
+{
+	background-color: #000000;
+ 	font-family: "Dosis";  /*"Averia Libre";*/
+ 	
+ 	  
+   font-size: 16px;
+	color: #FFFFFF;
+	position: absolute;
+	
+	  filter:alpha(opacity=60);
+	  -moz-opacity:0.6;
+	  -khtml-opacity: 0.6;
+	  opacity: 0.6;
+	
+	  position: relative;
+	margin-top: 310px;
+}
+
 .overlay
 {
 	background-color: #000000;
  	font-family: "Dosis";  /*"Averia Libre";*/
  	padding-top: 10px;
- 	padding-left: 10px;  
+ 	padding-left: 10px;
+ 	padding-bottom: 6px;  
    font-size: 16px;
 	color: #FFFFFF;
 	  position:absolute;
 	  left: 0px;
-	  bottom:0%;
+	  bottom:0px;
 	  filter:alpha(opacity=60);
 	  -moz-opacity:0.6;
 	  -khtml-opacity: 0.6;
