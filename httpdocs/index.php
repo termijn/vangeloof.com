@@ -30,65 +30,69 @@
 		<p>
 			<span id="title_martijn">Martijn van Geloof</span> <span id="title_photography">Photography</span>	
 		</p>
-		<p>
+		<p class="mainsection">
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		</p>
 		
-		<div>
-			<div class="navigateback" onclick="navigatebackward()">
-					&larr;
-			</div>
-			<div class="navigateforward" onclick="navigateforward()">
-					&rarr;
-			</div>
-		</div>
 		
-		<div class="gallery">
-			<div id="scrollcontainer" class="galleryscroller" >	
-				<div id="scrollcontent" >	
-				<?
-					foreach ((array)$sets['photoset'] as $photoset)
-				    {
-				    	$i++;
-				    	//echo "<br/>". $photoset["title"]."<br>";
-						$photos = $flickr->photosets_getPhotos($photoset["id"], NULL, NULL, 1);
-						
-						// Loop through the photos and output the html
-					    foreach ((array)$photos['photoset']['photo'] as $photo) 
+			<div class="line">
+				<div class="navigateback">
+						&larr;
+				</div>
+				<div class="navigateforward">
+						&rarr;
+				</div>
+				Photosets
+			</div>
+			
+			<div class="gallery" >
+				<div id="scrollcontainer" class="galleryscroller" >	
+					<div id="scrollcontent" >	
+					<?
+						foreach ((array)$sets['photoset'] as $photoset)
 					    {
-					        //echo "<a href=$photos_url$photo[id]>";
-					        ?>
-					        <div class="imgsetcontainer">
-					       		<img id="id<?= $photo['id']?>" class="flickrimg"  alt='$photo[title]' src="<?=$flickr->buildPhotoURL($photo, "medium_640") ?>" />
-								<span class="overlay"><?=$photoset['title'] ?></span>			
-							</div>
-							<?
-					          
-					    }
-						// If it reaches the sixth photo, insert a line break
-				        if ($i % 2 == 0) 
-				        {
-				            //echo "<br>\n";
-				        }
-						
-						if ($i == 8)
-						{
-							break;
+					    	$i++;
+					    	//echo "<br/>". $photoset["title"]."<br>";
+							$photos = $flickr->photosets_getPhotos($photoset["id"], NULL, NULL, 1);
+							
+							// Loop through the photos and output the html
+						    foreach ((array)$photos['photoset']['photo'] as $photo) 
+						    {
+						        //echo "<a href=$photos_url$photo[id]>";
+						        ?>
+						        <div class="imgsetcontainer">
+						       		<img id="id<?= $photo['id']?>" class="flickrimg"  alt='$photo[title]' src="<?=$flickr->buildPhotoURL($photo, "medium_640") ?>" />
+									<span class="overlay"><?=$photoset['title'] ?></span>			
+								</div>
+								<?
+						          
+						    }
+							// If it reaches the sixth photo, insert a line break
+					        if ($i % 2 == 0) 
+					        {
+					            //echo "<br>\n";
+					        }
+							
+							if ($i == 8)
+							{
+								break;
+							}
+							
 						}
-						
-					}
-				?>
+					?>
+					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div>
-			<div class="navigateback" onclick="navigatebackward()">
-					&larr;
+			
+			<div/>
+			
+			<div class="line">
+				<div class="navigateback">
+						&larr;
+				</div>
+				<div class="navigateforward">
+						&rarr;
+				</div>
 			</div>
-			<div class="navigateforward" onclick="navigateforward()">
-					&rarr;
-			</div>
-		</div>
 	</body>
 </html>

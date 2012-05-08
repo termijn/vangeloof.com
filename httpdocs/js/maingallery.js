@@ -1,3 +1,216 @@
+var imageGallery;
+
+var createImageAnimations=function()
+{
+	imageGallery = new gallery("flickrimg", "overlay", "scrollcontainer", "scrollcontent");
+	var forwardElements = getElementsByClassName("navigateforward");
+	for (var i = 0; i < forwardElements.length; i++)
+	{
+		forwardElements[i].onmousedown = function(imageGallery) {return imageGallery.navigateforward}(imageGallery); 
+	}
+	
+	var backwardElements = getElementsByClassName("navigateback");
+	for (var i = 0; i < backwardElements.length; i++)
+	{
+		backwardElements[i].onmousedown = function(imageGallery) {return imageGallery.navigatebackward}(imageGallery); 
+	}
+}
+
+function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid) 
+{
+	var self = this;
+	
+	this.setGalleryMoveOver = function(className) 
+	{
+		var imageElements = getElementsByClassName(className);
+		
+		for (var i = 0; i < imageElements.length; i++)
+		{
+			this.createHoverAnimation(imageElements[i]);
+		}
+	};
+	
+	this.onMouseOut = function(e, hitTestElem, animationElem)
+	{
+		e = e || event;
+	
+		if (this.isOutside(e, hitTestElem)) 
+		{
+			if (animationElem.opened) 
+			{
+				animationElem.opened = false;
+				animationElem.animator.seekTo(0.5);	
+			}
+		} 
+		else if (!animationElem.opened) 
+		{
+			animationElem.opened = true;
+			animationElem.animator.seekTo(0.7);	
+		}
+	};
+	
+	this.createHoverAnimation = function(element)
+	{			
+		var imageElements = getElementsByClassName("flickrimg", "img", element.parentNode);
+		
+		
+		element.parentNode.onmouseout = element.parentNode.onmousemove = 
+			function(hitTestElem, animationElem, gallery) 
+			{
+				return function(e) 
+				{
+					gallery.onMouseOut(e, hitTestElem, animationElem);
+				}
+			}(element.parentNode, element, this);
+			
+		//element.onclick = createThumbClickHandler(element);		
+		element.animator = 
+			new Animator(
+			{
+		    	duration: 1000,
+		    	interval: 5
+		    }
+		    );
+		    
+	    element.animator.addSubject(
+	    	function(img)
+			{
+				return function(value) 
+				{
+					setOpacity(img, value);
+				}
+			}(element)
+		);
+		element.animator.jumpTo(0.5);
+	};
+	
+	
+	
+	this.createScrollAnimation=function()
+	{
+		var scrollcontainer = document.getElementById("scrollcontainer");
+		var scrollcontent = document.getElementById("scrollcontent");
+		
+	   	self.images = getElementsByClassName("flickrimg");
+	   	self.imageIndex = 0;
+		self.currentImage = self.images[self.imageIndex];
+		
+		scrollcontainer.animator =
+			new Animator(
+				{
+			    	duration: 400,
+			    	interval: 1
+			    }
+			   );
+		    
+	    scrollcontainer.animator.addSubject(
+	    	function(scrollableContent)
+			{
+				return function(value) 
+				{
+					
+					self.position = self.startPosition + value * self.scrollStep;
+					if (self.position >= 0)
+					{
+						self.position = 0;
+					}
+					
+					if (value == 1.0)
+					{
+						self.isScrolling = false;
+					}
+					
+					scrollableContent.style.marginLeft =  self.position + "px";
+				}
+			}(scrollcontent)
+		);
+	};
+	
+	
+	this.navigatebackward=function(e)
+	{
+		if (self.isScrolling) 
+		{
+			return;	
+		}
+		
+		
+		self.imageIndex--;
+		
+		if (self.imageIndex >= 0)
+		{
+			self.isScrolling = true;
+			self.startPosition = self.position;
+		
+			self.currentImage = self.images[self.imageIndex];
+			self.scrollStep = self.currentImage.width + 3;
+			
+			var scrollcontainer = document.getElementById("scrollcontainer");
+			scrollcontainer.animator.play();
+		} 
+		else 
+		{
+			self.imageIndex = 0;
+			self.currentImage = self.images[self.imageIndex];
+		}
+		
+	};
+	
+	this.navigateforward=function(e) 
+	{
+		if (self.isScrolling || self.imageIndex == self.images.length-1) 
+		{
+			return;	
+		}
+		
+		self.scrollStep = -(self.currentImage.width + 3);
+	
+		if (self.imageIndex < self.images.length-1) 
+		{
+			self.startPosition = self.position;
+			self.isScrolling = true;
+			var scrollcontainer = document.getElementById("scrollcontainer");
+			scrollcontainer.animator.play();
+		}
+		self.imageIndex = Math.min(self.imageIndex+1, self.images.length-1);	
+		
+		self.currentImage = self.images[self.imageIndex];
+	};
+	
+	this.isOutside = function(evt, parent) 
+	{
+	  var elem = evt.relatedTarget || evt.toElement || evt.fromElement || evt.srcElement;
+	 
+	  while ( elem && elem !== parent) {
+	    elem = elem.parentNode;
+	  }
+	 
+	  if ( elem !== parent) {
+	    return true
+	  }
+	};
+
+	// Constructor logic
+	this.isScrolling = false;
+	this.imageIndex = 0;
+	this.position = 0;
+	
+	this.setGalleryMoveOver(imgoverlayclass);
+	this.createScrollAnimation();
+}
+
+var setOpacity = function(element, opacity)
+	{
+		var opacityPercentage = opacity * 100;
+		if (element.filters != null && element.filters.alpha != null)
+		{
+			element.filters.alpha.opacity= opacityPercentage;	
+		}
+			
+		element.style.filter='progid:DXImageTransform.Microsoft.Alpha(Opacity='+ opacityPercentage +')';
+		element.style.opacity = opacity;
+	};
+
 /*
 	Developed by Robert Nyman, http://www.robertnyman.com
 	Code/licensing: http://code.google.com/p/getelementsbyclassname/
@@ -76,240 +289,3 @@ var getElementsByClassName = function (className, tag, elm){
 	}
 	return getElementsByClassName(className, tag, elm);
 };
-
-function resize(imageid, max) 
-{
-  var elem = document.getElementById(imageid);
-  if (elem == undefined || elem == null) return false;
-  if (max == undefined) max = 100;
-  if (elem.width > elem.height) {
-    if (elem.width > max) elem.width = max;
-  } else {
-    if (elem.height > max) elem.height = max;
-  }
-  elem.style.visibility = 'visible';
-}
-
-function resizeHeight(imageid, maxHeight) 
-{
-  var elem = document.getElementById(imageid);
-  if (elem == undefined || elem == null) return false;
-  if (maxHeight == undefined) maxHeight = 100;
-  
-  
-    elem.height = maxHeight;
-  
-  elem.style.visibility = 'visible';
-}
-
-var createImageAnimations=function()
-{
-	setGalleryMoveOver("overlay");
-	createScrollAnimation();
-}
-
-var position = 0;
-var direction = 1;
-
-var createScrollAnimation=function()
-{
-	var scrollcontainer = document.getElementById("scrollcontainer");
-	var scrollcontent = document.getElementById("scrollcontent");
-	
-	scrollcontainer.animator =
-		new Animator(
-			{
-		    	duration: 500,
-		    	interval: 10
-		    }
-		   );
-	    
-    scrollcontainer.animator.addSubject(
-    	function(scrollableContent)
-		{
-			return function(value) 
-			{
-				var scrollStep = (document.width) / 10;
-				position += direction * (value * scrollStep);
-				if (position >= 0)
-				{
-					position = 0;
-				}
-				scrollableContent.style.marginLeft =  position + "px";
-			}
-		}(scrollcontent)
-	);
-}
-
-var navigatebackward=function(e)
-{
-	direction = 1;
-	var scrollcontainer = document.getElementById("scrollcontainer");
-	scrollcontainer.animator.play();
-}
-
-var navigateforward=function(e) 
-{
-	direction = -1;
-	var scrollcontainer = document.getElementById("scrollcontainer");
-	scrollcontainer.animator.play();
-}
-
-var scrollgallery=function(e) 
-{
-	e = e || event;
-	
-	var scrollcontainer = document.getElementById("scrollcontainer");
-	
-	var delta = event.clientX -  (window.innerWidth / 2);
-    if (delta < -250)
-    {
-    	if (direction = -1)
-    	{
-    	   scrollcontainer.animator.stop();
-    	   direction = 1;
-    	   scrollcontainer.animator.play();
-    	}
-    	
-    }
-    else if (delta > 250) {
-    	if (direction = 1)
-    	{
-    	   scrollcontainer.animator.stop();
-    	   direction = -1;
-    	   scrollcontainer.animator.play();
-    	}
-    	
-    } else 
-    {
-    	direction = 0;
-    	scrollcontainer.playing = false;
-    	scrollcontainer.animator.stop();
-    }
-    
-    
-	if (isOutside(e, scrollcontainer))
-	{
-		scrollcontainer.playing = false;
-		scrollcontainer.animator.seekTo(0);
-	} 
-	else 
-	{
-		if (!scrollcontainer.playing) 
-		{
-			scrollcontainer.playing = true;
-			scrollcontainer.animator.play();	
-		}
-	}
-	
-	
-	// var delta = event.clientX -  (window.innerWidth / 2);
-    // delta = delta / (window.innerWidth / 380);	
-// 	
-	// delta = Math.max(-190, Math.min(delta, 190));
-	// if(Math.abs(delta) < 50) 
-	// {
-		// return;	
-	// }
-// 	
-	// scrollposition -= delta;
-	// if (scrollposition > 0)
-	// {
-		// scrollposition = 0;
-	// }
-// 	
-	// scrollcontent.style.left = scrollposition + "px";
-}
-
-
-
-var setGalleryMoveOver=function(className) 
-{
-	var imageElements = getElementsByClassName(className);
-	
-	for (var i = 0; i < imageElements.length; i++)
-	{
-		createHoverAnimation(imageElements[i]);
-	}
-}
-
-var createHoverAnimation = function(element)
-{			
-	var imageElements = getElementsByClassName("flickrimg", "img", element.parentNode);
-	
-	
-	element.parentNode.onmouseout = element.parentNode.onmousemove = 
-		function(hitTestElem, animationElem) 
-		{
-			return function(e) 
-			{
-				onMouseOut(e, hitTestElem, animationElem);
-			}
-		}(element.parentNode, element);
-		
-	//element.onclick = createThumbClickHandler(element);		
-	element.animator = 
-		new Animator(
-		{
-	    	duration: 1000,
-	    	interval: 5
-	    }
-	    );
-	    
-    element.animator.addSubject(
-    	function(img)
-		{
-			return function(value) 
-			{
-				setOpacity(img, value);
-			}
-		}(element)
-	);
-	element.animator.jumpTo(0.5);
-}
-
-var onMouseOut = function(e, hitTestElem, animationElem)
-{
-	e = e || event;
-
-	if (isOutside(e, hitTestElem)) 
-	{
-		if (animationElem.opened) 
-		{
-			animationElem.opened = false;
-			animationElem.animator.seekTo(0.5);	
-		}
-	} 
-	else if (!animationElem.opened) 
-	{
-		animationElem.opened = true;
-		animationElem.animator.seekTo(0.7);	
-	}
-}
-
-
-var setOpacity = function(element, opacity)
-{
-	var opacityPercentage = opacity * 100;
-	if (element.filters != null && element.filters.alpha != null)
-	{
-		element.filters.alpha.opacity= opacityPercentage;	
-	}
-		
-	element.style.filter='progid:DXImageTransform.Microsoft.Alpha(Opacity='+ opacityPercentage +')';
-	element.style.opacity = opacity;
-};
-
-function isOutside(evt, parent) 
-{
-  var elem = evt.relatedTarget || evt.toElement || evt.fromElement || evt.srcElement;
- 
-  while ( elem && elem !== parent) {
-    elem = elem.parentNode;
-  }
- 
-  if ( elem !== parent) {
-    return true
-  }
-}
-

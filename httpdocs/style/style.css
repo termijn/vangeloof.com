@@ -16,8 +16,13 @@ body
 	font-size: 12px;
 	color: #999999;
 	line-height: 24px;
-	margin: 100px;
+	margin: 80px;
 	background-color: #000000;
+}
+
+.mainsection
+{
+	margin-bottom: 40px;
 }
 
 #scrollcontent
@@ -28,19 +33,29 @@ body
 
 .gallery
 {
-	margin-top: 40px;
-	
+	display: block;
 }
+
+.line 
+{
+	font-size: 18px;
+	display: block;
+	height: 30px;
+	vertical-align:middle;
+	text-align:center;
+}
+
 
 .navigateforward
 {
 	display: inline-block;
 	position: static;
 	float: right;
-    width: 30px;
+    width: 32px;
+    height: 100%;
 	text-align: right;
 	font-weight: bold;
-	font-size: 24px;
+	font-size: 32px;
 	cursor:pointer;
     overflow:hidden; 
 }
@@ -50,9 +65,10 @@ body
 	display: inline-block;
 	position: static;
 	float: left;
-    width: 30px;
+    width: 32px;
+    height: 100%;
 	font-weight: bold;
-    font-size: 24px;
+    font-size: 32px;
     cursor:pointer;
     overflow:hidden; 
 }
@@ -77,6 +93,15 @@ body
 {
 	position: relative;
 	display: inline;
+	border: none;
+}
+
+img 
+{
+	border: none;
+	margin: 0px;
+	padding: 0px;	
+	
 }
 
 
