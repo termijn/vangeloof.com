@@ -9,28 +9,23 @@
 	
 	$person = $flickr->people_findByUsername("Martijn van Geloof");
  
-    // Get the friendly URL of the user's photos
-    $photos_url = $flickr->urls_getUserPhotos($person['id']);
- 
  	$sets = $flickr->photosets_getList($person['id']);
-    
-	// see http://www.smashingmagazine.com/2009/07/10/35-beautiful-photography-websites/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<title>Martijn van Geloof</title>
-		<link href='http://fonts.googleapis.com/css?family=Dosis|Oxygen|Averia+Libre' rel='stylesheet' type='text/css' />
+		<link href='http://fonts.googleapis.com/css?family=Dosis|Oxygen' rel='stylesheet' type='text/css' />
 		<link href='style/style.css' rel='stylesheet' type='text/css' />
 		<script type="text/javascript" src="js/animator.min.js"></script>
 		<script type="text/javascript" src="js/maingallery.js"></script>
 	</head>
 	<body onload="createImageAnimations()">
-		<p>
+		<p id="titlesection">
 			<span id="title_martijn">Martijn van Geloof</span> <span id="title_photography">Photography</span>	
 		</p>
-		<p class="mainsection">
+		<p id="mainsection">
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		</p>
 		
@@ -42,7 +37,7 @@
 				<div class="navigateforward">
 						&rarr;
 				</div>
-				Photosets
+				<span id="backtoimagesets">&uarr;</span>
 			</div>
 			
 			<div class="gallery" >
@@ -58,25 +53,16 @@
 							// Loop through the photos and output the html
 						    foreach ((array)$photos['photoset']['photo'] as $photo) 
 						    {
-						        //echo "<a href=$photos_url$photo[id]>";
 						        ?>
 						        <div class="imgsetcontainer">
-						       		<img id="id<?= $photo['id']?>" class="flickrimg"  alt='$photo[title]' src="<?=$flickr->buildPhotoURL($photo, "medium_640") ?>" />
+						       		<img id="id<?= $photo['id']?>" class="flickrimg"  alt='<?=$photoset["id"] ?>' src="<?=$flickr->buildPhotoURL($photo, "medium_640") ?>" />
 									<span class="overlay"><?=$photoset['title'] ?></span>			
 								</div>
 								<?
 						          
 						    }
-							// If it reaches the sixth photo, insert a line break
-					        if ($i % 2 == 0) 
-					        {
-					            //echo "<br>\n";
-					        }
 							
-							if ($i == 8)
-							{
-								break;
-							}
+						
 							
 						}
 					?>

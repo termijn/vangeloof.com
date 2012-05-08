@@ -49,10 +49,63 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 		}
 	};
 	
+	this.backtosets = function() 
+	{
+		getURL('getphotosets.php', 
+			function(status) 
+			{
+				var element = document.getElementById("scrollcontent");
+				element.innerHTML = status.content;	
+				self.reset();
+			}
+		);
+	}
+	
+	this.reset = function()
+	{
+		self.isScrolling = false;
+		self.position = 0;
+		self.images = getElementsByClassName("flickrimg");
+	   	self.imageIndex = 0;
+		self.currentImage = self.images[self.imageIndex];
+		
+		this.setGalleryMoveOver(imgoverlayclass);
+		var scrollcontent = document.getElementById("scrollcontent");
+		scrollcontent.style.marginLeft =  self.position + "px";
+	}
+	
+	this.imageclicked = function(e, setid) 
+	{
+		getURL('getphotoset.php?id=' + escape(setid), 
+			function(status) 
+			{
+				var element = document.getElementById("scrollcontent");
+				element.innerHTML = status.content;	
+				self.reset();
+			}
+		);
+	}
+	
 	this.createHoverAnimation = function(element)
 	{			
+		var backbutton = document.getElementById('backtoimagesets');
+		backbutton.onmousedown = function(e)
+		{
+			self.backtosets();
+		};
 		var imageElements = getElementsByClassName("flickrimg", "img", element.parentNode);
 		
+		for (var i = 0; i < imageElements.length; i++)
+		{
+			imageElements[i].onmousedown = 
+				function(setid) 
+				{ 
+					return function(e)
+					{
+						self.imageclicked(e, setid);
+					} 
+				}(imageElements[i].alt); 
+		}
 		
 		element.parentNode.onmouseout = element.parentNode.onmousemove = 
 			function(hitTestElem, animationElem, gallery) 
@@ -191,11 +244,7 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 	};
 
 	// Constructor logic
-	this.isScrolling = false;
-	this.imageIndex = 0;
-	this.position = 0;
-	
-	this.setGalleryMoveOver(imgoverlayclass);
+	this.reset();
 	this.createScrollAnimation();
 }
 
@@ -289,3 +338,67 @@ var getElementsByClassName = function (className, tag, elm){
 	}
 	return getElementsByClassName(className, tag, elm);
 };
+
+function HTTP() {
+ var xmlhttp
+ /*@cc_on @*/
+ /*@if (@_jscript_version >= 5)
+   try {
+   xmlhttp=new ActiveXObject("Msxml2.XMLHTTP")
+  } catch (e) {
+   try {
+     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP")
+   } catch (E) {
+    xmlhttp=false
+   }
+  }
+ @else
+  xmlhttp=false
+ @end @*/
+ if (!xmlhttp) {
+  try {
+   xmlhttp = new XMLHttpRequest();
+  } catch (e) {
+   xmlhttp=false
+  }
+ }
+ return xmlhttp
+}
+
+if (typeof getURL=='undefined') {
+ getURL=function(url,fn) { 
+  var xmlhttp= HTTP();
+  if (xmlhttp) {
+   xmlhttp.open('GET',url, true, '', '');  
+
+   xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState==4) {
+     fn({status:xmlhttp.status,content:xmlhttp.responseText,
+      contentType:xmlhttp.getResponseHeader("Content-Type")})
+    }
+   }
+   xmlhttp.send(null)
+  } else {
+   //Some Appropriate Fallback...
+  }
+ }
+}
+if (typeof postURL=='undefined') {
+ postURL=function(url,txt,fn,type,enc) {
+  var xmlhttp=new HTTP();
+  if (xmlhttp) {
+   xmlhttp.open("POST",url,true);
+   if (enc) xmlhttp.setRequestHeader("Content-Encoding",enc)
+   if (type) xmlhttp.setRequestHeader("Content-Type",type)
+   xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState==4) {
+     fn({status:xmlhttp.status,content:xmlhttp.responseText,
+      contentType:xmlhttp.getResponseHeader("Content-Type")})
+    }
+   }
+   xmlhttp.send(txt)
+  } else {
+   //Some Appropriate Fallback...
+  }
+ }
+}

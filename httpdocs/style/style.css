@@ -20,9 +20,16 @@ body
 	background-color: #000000;
 }
 
-.mainsection
+#titlesection
 {
 	margin-bottom: 40px;
+}
+
+
+#mainsection
+{
+	margin-bottom: 40px;
+	text-align:justify;
 }
 
 #scrollcontent
@@ -87,6 +94,12 @@ body
 {
 	height: 400px;
 	margin: 0px;
+	cursor: pointer; 
+}
+
+#backtoimagesets
+{
+	cursor: pointer;
 }
 
 .imgsetcontainer
@@ -149,7 +162,6 @@ img
 	font-family: "Dosis";  /*"Averia Libre";*/
 	font-size: 48px;
 	color: #999999;
-	line-height: 92px;
 }
 
 #title_photography
@@ -157,5 +169,4 @@ img
 	font-family: "Dosis";  /*"Averia Libre";*/
 	font-size: 48px;
 	color: #555555;
-	line-height: 92px;
 }
