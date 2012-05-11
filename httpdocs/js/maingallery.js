@@ -51,12 +51,14 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 	
 	this.backtosets = function() 
 	{
+		self.showwait();
 		getURL('getphotosets.php', 
 			function(status) 
 			{
 				var element = document.getElementById("scrollcontent");
 				element.innerHTML = status.content;	
 				self.reset();
+				self.hidewait();
 			}
 		);
 	}
@@ -74,14 +76,31 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 		scrollcontent.style.marginLeft =  self.position + "px";
 	}
 	
+	this.showwait = function() 
+	{
+		var waitingElement = document.getElementById("pageoverlay");
+		setOpacity(waitingElement, 0.5);
+		waitingElement.style.visibility = "visible";
+	}
+	
+	this.hidewait = function() 
+	{
+		var waitingElement = document.getElementById("pageoverlay");
+		setOpacity(waitingElement, 0.0);
+		waitingElement.style.visibility = "hidden";
+	}
+
+	
 	this.imageclicked = function(e, setid) 
 	{
+		self.showwait();
 		getURL('getphotoset.php?id=' + escape(setid), 
 			function(status) 
 			{
 				var element = document.getElementById("scrollcontent");
 				element.innerHTML = status.content;	
 				self.reset();
+				self.hidewait();
 			}
 		);
 	}

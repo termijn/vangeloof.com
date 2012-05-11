@@ -41,8 +41,13 @@
 			</div>
 			
 			<div class="gallery" >
-				<div id="scrollcontainer" class="galleryscroller" >	
-					<div id="scrollcontent" >	
+				
+		
+				<div id="scrollcontainer" class="galleryscroller" >
+					<div id="pageoverlay">
+						<img src="ajax-loader.gif" alt="loading" />
+					</div>	
+					<div id="scrollcontent" >
 					<?
 						foreach ((array)$sets['photoset'] as $photoset)
 					    {
@@ -61,9 +66,6 @@
 								<?
 						          
 						    }
-							
-						
-							
 						}
 					?>
 					</div>
