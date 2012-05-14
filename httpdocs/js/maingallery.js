@@ -94,7 +94,7 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 	this.imageclicked = function(e, setid) 
 	{
 		self.showwait();
-		getURL('getphotoset.php?id=' + escape(setid), 
+		getURL('getphotoset.php?setid=' + escape(setid), 
 			function(status) 
 			{
 				var element = document.getElementById("scrollcontent");
@@ -103,6 +103,19 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 				self.hidewait();
 			}
 		);
+	}
+	
+	this.photoclicked = function(e, imageElement)
+	{
+		var element = document.getElementById("detailoverlay");
+		var detailimage = document.getElementById("detailimage");
+		var detailoverlaycover = document.getElementById("detailoverlaycover");
+		element.style.visibility = "visible";
+		detailoverlaycover.style.visibility = "visible";
+		setOpacity(detailoverlaycover, 0);
+		setOpacity(element, 0);
+		detailimage.src = imageElement.src;
+		element.animator.seekTo(1.0);
 	}
 	
 	this.createHoverAnimation = function(element)
@@ -116,14 +129,31 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 		
 		for (var i = 0; i < imageElements.length; i++)
 		{
-			imageElements[i].onmousedown = 
-				function(setid) 
-				{ 
-					return function(e)
-					{
-						self.imageclicked(e, setid);
-					} 
-				}(imageElements[i].alt); 
+			if (imageElements[i].alt.startsWith("set"))
+			{
+				var setId = imageElements[i].alt.replace("set","");
+				imageElements[i].onmousedown = 
+					function(setid) 
+					{ 
+						return function(e)
+						{
+							self.imageclicked(e, setid);
+						} 
+					}(setId);
+			}  
+			else if (imageElements[i].alt.startsWith("photo")) 
+			{
+				var image = imageElements[i];				
+				var photoId = image.alt.replace("photo","");
+				image.onmousedown = 
+					function(imageElement) 
+					{ 
+						return function(e)
+						{
+							self.photoclicked(e, imageElement);
+						} 
+					}(image);
+			}
 		}
 		
 		element.parentNode.onmouseout = element.parentNode.onmousemove = 
@@ -156,7 +186,39 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 		element.animator.jumpTo(0.5);
 	};
 	
-	
+	this.createDetailAnimation=function()
+	{
+		var detailoverlay = document.getElementById("detailoverlay");
+		var detailimage = document.getElementById("detailimage");
+		var detailoverlaycover = document.getElementById("detailoverlaycover");
+		
+		detailimage.onmousedown = detailoverlay.onmousedown = detailoverlaycover.onmousedown = function(element)
+		{
+			return function(e) 
+			{
+				element.animator.seekTo(0.0);
+			};
+		}(detailoverlay);
+		
+		
+		detailoverlay.animator = new Animator( { duration: 400, interval: 1 } );
+		
+	    detailoverlay.animator.addSubject(
+	    	function(image, detailoverlaycover)
+			{
+				return function(value) 
+				{
+					if (value == 0.0)
+					{
+						image.style.visibility = "hidden";
+						detailoverlaycover.style.visibility = "hidden";
+					}
+					setOpacity(image, value);
+					setOpacity(detailoverlaycover, value / 1.5);
+				}
+			}(detailoverlay, detailoverlaycover)
+		);	
+	}
 	
 	this.createScrollAnimation=function()
 	{
@@ -264,7 +326,9 @@ function gallery(imgclass, imgoverlayclass, scrollcontainerid, scrollcontentid)
 
 	// Constructor logic
 	this.reset();
+	this.createDetailAnimation();
 	this.createScrollAnimation();
+	this.backtosets();
 }
 
 var setOpacity = function(element, opacity)
@@ -357,6 +421,12 @@ var getElementsByClassName = function (className, tag, elm){
 	}
 	return getElementsByClassName(className, tag, elm);
 };
+
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function (str){
+    return this.indexOf(str) == 0;
+  };
+}
 
 function HTTP() {
  var xmlhttp

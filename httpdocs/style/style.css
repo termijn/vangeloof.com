@@ -32,6 +32,47 @@ body
 	text-align:justify;
 }
 
+#detailimage
+{
+	padding-top: 20px;
+	
+
+	cursor: pointer;
+}
+
+#detailoverlay
+{
+	cursor: pointer;
+	text-align: center;
+	height:100%;
+	width:100%;
+	position:fixed;
+	left:0;
+	top:0;
+	z-index:200;
+	visibility: hidden;
+	overflow:scroll;
+}
+
+#detailoverlaycover
+{
+	
+	text-align: center;
+	height:100%;
+	width:100%;
+	position:fixed;
+	left:0;
+	top:0;
+	z-index:150;
+	visibility: hidden;
+	
+    background-color: black;
+   	  filter:alpha(opacity=60);
+	  -moz-opacity:0.6;
+	  -khtml-opacity: 0.6;
+	  opacity: 0.6;
+}
+
 #scrollcontent
 {
 	overflow:hidden;
@@ -41,6 +82,7 @@ body
 .gallery
 {
 	display: block;
+	height: 400px;
 }
 
 .line 
@@ -186,3 +228,5 @@ img
 	font-size: 48px;
 	color: #555555;
 }
+
+div#preload { display: none; }
