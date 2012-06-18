@@ -18,18 +18,20 @@
 		foreach ((array)$setsList['photoset'] as $photoset)
 	    {
 	    	$i++;
-	    	
-			$setphotos = $flickr->photosets_getPhotos($photoset["id"], NULL, NULL, 1);
 			
-			foreach((array)$setphotos['photoset']['photo']  as $photo)
-			{
-				$setphoto = array();
-				$setphoto['title'] = $photoset['title'];
-				$setphoto['setid'] = $photoset["id"];
-				$setphoto['photo'] = $photo;
-				$setphoto['id'] = $photo['id'];
-				array_push($setsphotos, $setphoto);	
-			}
+			$photo = array();
+			$photo['id'] = $photoset['primary'];
+			$photo['secret'] = $photoset['secret'];
+			$photo['server']=  $photoset['server'];
+			$photo['farm']=  $photoset['farm'];
+			$photo['isprimary'] = '1';
+			
+			$setphoto = array();
+			$setphoto['title'] = $photoset['title'];
+			$setphoto['setid'] = $photoset["id"];
+			$setphoto['photo'] = $photo;
+			$setphoto['id'] = $photoset['primary'];
+			array_push($setsphotos, $setphoto);
 		}
 		$_SESSION["setsphotos"] = &$setsphotos;
 	} 
@@ -43,8 +45,20 @@
 	
 	if (isset($_GET['setid']))
 	{
+		// A photoset is requested
 		$setid = $_GET['setid'];
-		$setphotos = &$flickr->photosets_getPhotos($setid, NULL, NULL);
+		$setkey = "set".$setid;
+		if (!isset($_SESSION[$setkey]))
+		{
+			// The set is not yet cached
+			$setphotos = &$flickr->photosets_getPhotos($setid, NULL, NULL);
+			$_SESSION[$setkey] = &$setphotos; 
+		} 
+		else 
+		{
+			// The set is already cached in the session
+			$setphotos = &$_SESSION[$setkey]; 	
+		}
 	}
 
 ?>
